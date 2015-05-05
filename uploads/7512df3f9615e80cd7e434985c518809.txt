@@ -1,0 +1,38 @@
+ $(function () {
+  //  $( document ).ready(function() {
+        console.log( "ready!" );
+
+        var files;
+
+        // Add events
+        $('input[type=file]').on('change', uploadFiles);
+
+
+        // Catch the form submit and upload the files
+        function uploadFiles(event)
+        {
+            var mydata =  new FormData();
+            mydata.append("myfile", event.target.files[0]);  // event.target.files has multiple files
+
+            var request = $.ajax({
+                url: '/uploads',
+                type: 'POST',
+                data: mydata,
+                cache: false,
+                dataType: 'json',
+                processData: false, // Don't process the files
+                contentType: false // Set content type to false as jQuery will tell the server its a query string request
+            });
+
+            request.done(function(msg) {
+                    // Success so call function to process the form
+                    console.log("success " + msg);
+                updateFileView();
+            });
+            request.fail(function(jqXHR, textStatus) {
+                    // Handle errors here
+                    console.log('ERRORS: ' + textStatus);
+                    // STOP LOADING SPINNER
+            });
+        }
+    });

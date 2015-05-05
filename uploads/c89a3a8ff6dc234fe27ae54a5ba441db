@@ -1,0 +1,32 @@
+54f8fda7dabbb3a26e0e0583
+
+54f8fdf3dabbb3a26e0e0584
+
+db.schools.update(
+  { _id: ObjectId("54f8fda7dabbb3a26e0e0583") },
+   {
+      $set: {
+        departments:["Computer Science","Electrical Engineering"]
+       }
+   }
+);
+
+info
+
+db.schools.insert(
+    {
+         name : "University of Florida", 
+         city : "Gainesville", 
+         zipcode : "32608", 
+         coords : { 
+                    lat : 29.643632, 
+                    lon : -82.35493 
+                  },
+         departments : [ "Software Engineering", "Computer Science" ] 
+
+    }
+
+)
+
+{ "_id" : ObjectId("54f8fce0dabbb3a26e0e0580"), "name" : "University of Florida", "city" : "Gainesville", "zipcode" : "32608", "coords" : { "lat" : 29.643632, "lon" : -82.35493 }, "departments" : [ "Software Engineering", "Computer Science" ] }
+

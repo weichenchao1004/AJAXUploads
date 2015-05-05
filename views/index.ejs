@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+</head>
+
+<body>
+<input type="file"/>
+<script src="bower_components/jquery/dist/jquery.js"></script>
+
+<script>
+
+    $(function () {
+        //  $( document ).ready(function() {
+        console.log( "ready!" );
+
+        var files;
+
+        // Add events
+        $('input[type=file]').on('change', uploadFiles);
+
+
+        // Catch the form submit and upload the files
+        function uploadFiles(event)
+        {
+            var mydata =  new FormData();
+            mydata.append("upfile", event.target.files[0]);  // event.target.files has multiple files
+
+            var request = $.ajax({
+                url: '/uploads',
+                type: 'POST',
+                data: mydata,
+                cache: false,
+                dataType: 'json',
+                processData: false, // Don't process the files
+                contentType: false // Set content type to false as jQuery will tell the server its a query string request
+            });
+
+            request.done(function(msg) {
+                // Success so call function to process the form
+                console.log("success " + msg);
+                updateFiles();
+            });
+            request.fail(function(jqXHR, textStatus) {
+                // Handle errors here
+                console.log('ERRORS: ' + textStatus);
+                // STOP LOADING SPINNER
+            });
+        }
+    });
+
+    function updateFiles() {
+        $.getJSON('/uploads',function(jsondata){
+            var files = jsondata;
+
+            var container = document.querySelector('#allfile');
+            files.forEach(function(fileItem){
+                addFileToView(container,fileItem);
+            })
+        })
+    }
+
+    function createElement(type, parent, innerHTML, className) {
+        var element = document.createElement(type);
+        if (innerHTML) element.innerHTML = innerHTML;
+        if (className) element.className = className;
+        if (parent) parent.appendChild(element);
+        return element;
+    }
+
+    function addFileToView(objs_container, obj) {
+        var obj_div = createElement('div', objs_container, '', 'obj-container');
+        createElement('span', obj_div, obj.name , 'obj-name');
+        createElement('span', obj_div, obj.info.originalname, 'obj-info');
+        var link = createElement('a',obj_div,'','');
+
+        link.setAttribute('href',"/files/" + obj.name);
+        link.setAttribute('download',obj.name);
+        createElement('button',link,'Download','obj-download')
+
+
+
+
+
+
+    }
+
+</script>
+
+
+<section class="panel">
+    <h1>View All file</h1>
+    <div id="allfile"></div>
+</section>
+
+
+
+
+</body>
+</html>
